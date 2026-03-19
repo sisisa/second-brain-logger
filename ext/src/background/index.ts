@@ -11,7 +11,7 @@ chrome.runtime.onMessage.addListener((message: any, sender: chrome.runtime.Messa
 });
 
 async function handleSaveLog(data: any) {
-  const GAS_URL = 'YOUR_GAS_WEB_APP_URL'; // ユーザーがデプロイしたURLに置き換える必要がある
+  const GAS_URL = 'https://script.google.com/macros/s/AKfycby1vyeVutKtL0rfaEXUdu-6lPv6z_qHjZt6JhK3uLkal4DJFNgB4Sui0WEvtVvwolNXlg/exec'; // ユーザーがデプロイしたURLに置き換える必要がある
 
   try {
     const response = await fetch(GAS_URL, {
