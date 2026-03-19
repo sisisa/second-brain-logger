@@ -13,7 +13,7 @@ chrome.runtime.onMessage.addListener((message: any, sender: chrome.runtime.Messa
 });
 
 async function handleSaveLog(data: any) {
-  const GAS_URL = 'https://script.google.com/macros/s/AKfycbw_gp9aTxWiGPi4hFfClRaX6CHdZAdknVaJJzdfCa8GXXSKl9sVBCkkkvf6n1It-mtMJg/exec';
+  const GAS_URL = 'YOUR_GAS_WEB_APP_URL';
 
   const response = await fetch(GAS_URL, {
     method: 'POST',
@@ -22,19 +22,8 @@ async function handleSaveLog(data: any) {
   });
 
   if (!response.ok) {
-    const errorText = await response.text();
-    throw new Error(`GAS HTTP error! status: ${response.status}, message: ${errorText.substring(0, 100)}`);
+    throw new Error(`GAS HTTP error! status: ${response.status}`);
   }
 
-  const text = await response.text();
-  try {
-    return JSON.parse(text);
-  } catch (e) {
-    console.warn('AI Learning Log: GAS returned non-JSON response.', text);
-    // スプレッドシートには保存できているケースがあるため、status: success を擬似的に返すか検討
-    if (text.includes('success') || text.includes('Google') || response.ok) {
-      return { status: 'success', note: 'Response was HTML but registration may have succeeded' };
-    }
-    throw new Error(`Invalid JSON response from GAS: ${text.substring(0, 100)}`);
-  }
+  return await response.json();
 }

@@ -47,7 +47,7 @@ function injectButton() {
     try {
       const data = extractData();
       const response = await chrome.runtime.sendMessage({ type: 'SAVE_LOG', data });
-      
+
       if (!response || !response.success) {
         throw new Error(response?.error || 'Unknown error from background script');
       }
@@ -55,7 +55,7 @@ function injectButton() {
       // フィードバックの改善
       const originalHTML = btn.innerHTML;
       const originalBG = btn.style.backgroundColor;
-      
+
       btn.innerHTML = '✅ <span>Saved!</span>';
       btn.style.backgroundColor = '#28a745';
       btn.disabled = true;
@@ -82,7 +82,7 @@ function extractData() {
   try {
     const title = document.title;
     const url = window.location.href;
-    
+
     // 質問と回答の抽出
     const queries = Array.from(document.querySelectorAll('h1, h2')).map(el => (el as HTMLElement).innerText);
     const answers = Array.from(document.querySelectorAll('.prose')).map(el => (el as HTMLElement).innerText);
@@ -94,7 +94,7 @@ function extractData() {
         return parent !== null;
       })
       .map(a => (a as HTMLAnchorElement).href);
-    
+
     // 重複削除
     const uniqueSources = [...new Set(sourceLinks)];
 
