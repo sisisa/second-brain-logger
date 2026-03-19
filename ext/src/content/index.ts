@@ -40,6 +40,10 @@ function injectButton() {
   };
 
   btn.onclick = async () => {
+    if (!chrome.runtime?.id) {
+      alert('拡張機能が更新されました。ページを再読み込みしてください。');
+      return;
+    }
     try {
       const data = extractData();
       const response = await chrome.runtime.sendMessage({ type: 'SAVE_LOG', data });
@@ -109,8 +113,18 @@ function extractData() {
 
 // 動的な変更に対応するため監視
 const observer = new MutationObserver(() => {
-  injectButton();
+  if (!chrome.runtime?.id) {
+    observer.disconnect();
+    return;
+  }
+  try {
+    injectButton();
+  } catch (e) {
+    observer.disconnect();
+  }
 });
 
-observer.observe(document.body, { childList: true, subtree: true });
-injectButton();
+if (chrome.runtime?.id) {
+  observer.observe(document.body, { childList: true, subtree: true });
+  injectButton();
+}
