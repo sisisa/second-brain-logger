@@ -40,53 +40,67 @@ function injectButton() {
   };
 
   btn.onclick = async () => {
-    const data = extractData();
-    chrome.runtime.sendMessage({ type: 'SAVE_LOG', data });
-    
-    // フィードバックの改善: ボタンの状態を一時的に変更
-    const originalHTML = btn.innerHTML;
-    const originalBG = btn.style.backgroundColor;
-    
-    btn.innerHTML = '✅ <span>Saved!</span>';
-    btn.style.backgroundColor = '#28a745';
-    btn.disabled = true;
+    try {
+      const data = extractData();
+      await chrome.runtime.sendMessage({ type: 'SAVE_LOG', data });
+      
+      // フィードバックの改善: ボタンの状態を一時的に変更
+      const originalHTML = btn.innerHTML;
+      const originalBG = btn.style.backgroundColor;
+      
+      btn.innerHTML = '✅ <span>Saved!</span>';
+      btn.style.backgroundColor = '#28a745';
+      btn.disabled = true;
 
-    setTimeout(() => {
-      btn.innerHTML = originalHTML;
-      btn.style.backgroundColor = originalBG;
-      btn.disabled = false;
-    }, 3000);
+      setTimeout(() => {
+        btn.innerHTML = originalHTML;
+        btn.style.backgroundColor = originalBG;
+        btn.disabled = false;
+      }, 3000);
+    } catch (error: any) {
+      console.error('AI Learning Log: Error', error);
+      if (error.message.includes('Extension context invalidated')) {
+        alert('拡張機能が更新されました。ページを再読み込みしてください。');
+      } else {
+        alert('保存中にエラーが発生しました: ' + error.message);
+      }
+    }
   };
 
   document.body.appendChild(btn);
 }
 
 function extractData() {
-  const title = document.title;
-  const url = window.location.href;
-  
-  // 質問と回答の抽出
-  const queries = Array.from(document.querySelectorAll('h1, h2')).map(el => (el as HTMLElement).innerText);
-  const answers = Array.from(document.querySelectorAll('.prose')).map(el => (el as HTMLElement).innerText);
+  try {
+    const title = document.title;
+    const url = window.location.href;
+    
+    // 質問と回答の抽出
+    const queries = Array.from(document.querySelectorAll('h1, h2')).map(el => (el as HTMLElement).innerText);
+    const answers = Array.from(document.querySelectorAll('.prose')).map(el => (el as HTMLElement).innerText);
 
-  // ソースURLの抽出 (Perplexityの構造: [1], [2] などのリンクや、Sourcesセクション)
-  const sourceLinks = Array.from(document.querySelectorAll('a[href^="http"]'))
-    .filter(a => {
-      const parent = a.closest('[class*="source"], [class*="citation"], [class*="reference"]');
-      return parent !== null;
-    })
-    .map(a => (a as HTMLAnchorElement).href);
-  
-  // 重複削除
-  const uniqueSources = [...new Set(sourceLinks)];
+    // ソースURLの抽出
+    const sourceLinks = Array.from(document.querySelectorAll('a[href^="http"]'))
+      .filter(a => {
+        const parent = a.closest('[class*="source"], [class*="citation"], [class*="reference"]');
+        return parent !== null;
+      })
+      .map(a => (a as HTMLAnchorElement).href);
+    
+    // 重複削除
+    const uniqueSources = [...new Set(sourceLinks)];
 
-  return {
-    title,
-    url,
-    query: queries[0] || 'Unknown Query',
-    answer: answers.join('\n\n') || 'No AI Answer found',
-    sources: uniqueSources
-  };
+    return {
+      title,
+      url,
+      query: queries[0] || 'Unknown Query',
+      answer: answers.join('\n\n') || 'No AI Answer found',
+      sources: uniqueSources
+    };
+  } catch (e) {
+    console.error('Extraction Error:', e);
+    return { title: 'Error', url: '', query: '', answer: '', sources: [] };
+  }
 }
 
 // 動的な変更に対応するため監視
