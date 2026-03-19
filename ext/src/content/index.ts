@@ -9,11 +9,6 @@ function injectButton() {
   // ボタンが既に存在するか確認
   if (document.getElementById('ai-learning-log-btn')) return;
 
-  // ボタンを表示する親要素を探す
-  // Perplexityの仕様に合わせる必要がある
-  const actionBar = document.querySelector('div[role="main"]'); // 仮のセレクタ
-  if (!actionBar) return;
-
   const btn = document.createElement('button');
   btn.id = 'ai-learning-log-btn';
   btn.innerHTML = '🚀 <span>Save to Log</span>';
