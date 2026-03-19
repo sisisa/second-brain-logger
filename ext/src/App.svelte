@@ -19,14 +19,16 @@
     </button>
   </nav>
 
-  <section class="content">
-    {#if activeTab === 'dashboard'}
-      <Dashboard />
-    {:else if activeTab === 'history'}
-      <History />
-    {:else if activeTab === 'search'}
-      <Search />
-    {/if}
+  <section class="scrollable">
+    <section class="content">
+      {#if activeTab === 'dashboard'}
+        <Dashboard />
+      {:else if activeTab === 'history'}
+        <History />
+      {:else if activeTab === 'search'}
+        <Search />
+      {/if}
+    </section>
   </section>
 </main>
 
@@ -69,9 +71,12 @@
     border-bottom: 2px solid #00bbff;
   }
 
-  .content {
+  .scrollable {
     flex: 1;
     overflow-y: auto;
+  }
+
+  .content {
     padding: 15px;
   }
 </style>
