@@ -42,9 +42,13 @@ function injectButton() {
   btn.onclick = async () => {
     try {
       const data = extractData();
-      await chrome.runtime.sendMessage({ type: 'SAVE_LOG', data });
+      const response = await chrome.runtime.sendMessage({ type: 'SAVE_LOG', data });
       
-      // フィードバックの改善: ボタンの状態を一時的に変更
+      if (!response || !response.success) {
+        throw new Error(response?.error || 'Unknown error from background script');
+      }
+
+      // フィードバックの改善
       const originalHTML = btn.innerHTML;
       const originalBG = btn.style.backgroundColor;
       
