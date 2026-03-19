@@ -1,0 +1,28 @@
+{
+  "manifest_version": 3,
+  "name": "AI Learning Log",
+  "version": "1.0.0",
+  "description": "Perplexityの調査結果をAIで整理し、スプレッドシートに保存します。",
+  "permissions": [
+    "storage",
+    "activeTab",
+    "scripting"
+  ],
+  "host_permissions": [
+    "https://www.perplexity.ai/*",
+    "https://script.google.com/*"
+  ],
+  "action": {
+    "default_popup": "index.html"
+  },
+  "background": {
+    "service_worker": "assets/background.js",
+    "type": "module"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://www.perplexity.ai/*"],
+      "js": ["assets/content.js"]
+    }
+  ]
+}
