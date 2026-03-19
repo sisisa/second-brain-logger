@@ -32,13 +32,14 @@
 
 <style>
   main {
-    width: 350px;
-    height: 500px;
+    width: 400px;
+    height: 550px;
     display: flex;
     flex-direction: column;
     background: #1a1a1a;
     color: #fff;
-    font-family: 'Inter', sans-serif;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    overflow: hidden;
   }
 
   .tabs {

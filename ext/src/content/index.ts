@@ -16,17 +16,33 @@ function injectButton() {
 
   const btn = document.createElement('button');
   btn.id = 'ai-learning-log-btn';
-  btn.innerText = 'Save to Log';
+  btn.innerHTML = '🚀 <span>Save to Log</span>';
   btn.style.position = 'fixed';
-  btn.style.bottom = '20px';
-  btn.style.right = '20px';
-  btn.style.zIndex = '9999';
-  btn.style.padding = '10px 15px';
+  btn.style.bottom = '30px';
+  btn.style.right = '30px';
+  btn.style.zIndex = '2147483647'; // 最大のZインデックス
+  btn.style.padding = '12px 20px';
   btn.style.backgroundColor = '#00bbff';
   btn.style.color = 'white';
-  btn.style.border = 'none';
-  btn.style.borderRadius = '5px';
+  btn.style.border = '2px solid white';
+  btn.style.borderRadius = '30px';
   btn.style.cursor = 'pointer';
+  btn.style.boxShadow = '0 4px 15px rgba(0,0,0,0.3)';
+  btn.style.fontSize = '14px';
+  btn.style.fontWeight = 'bold';
+  btn.style.display = 'flex';
+  btn.style.alignItems = 'center';
+  btn.style.gap = '8px';
+  btn.style.transition = 'transform 0.2s, background-color 0.2s';
+
+  btn.onmouseover = () => {
+    btn.style.transform = 'scale(1.05)';
+    btn.style.backgroundColor = '#0099dd';
+  };
+  btn.onmouseout = () => {
+    btn.style.transform = 'scale(1)';
+    btn.style.backgroundColor = '#00bbff';
+  };
 
   btn.onclick = () => {
     const data = extractData();
