@@ -10,7 +10,8 @@
   ],
   "host_permissions": [
     "https://www.perplexity.ai/*",
-    "https://script.google.com/*"
+    "https://script.google.com/*",
+    "https://script.googleusercontent.com/*"
   ],
   "action": {
     "default_popup": "index.html"

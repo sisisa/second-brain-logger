@@ -22,8 +22,14 @@ async function handleSaveLog(data: any) {
   });
 
   if (!response.ok) {
-    throw new Error(`GAS HTTP error! status: ${response.status}`);
+    const errorText = await response.text();
+    throw new Error(`GAS HTTP error! status: ${response.status}, message: ${errorText.substring(0, 100)}`);
   }
 
-  return await response.json();
+  const text = await response.text();
+  try {
+    return JSON.parse(text);
+  } catch (e) {
+    throw new Error(`Invalid JSON response from GAS: ${text.substring(0, 100)}`);
+  }
 }
